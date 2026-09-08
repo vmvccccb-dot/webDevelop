@@ -1,0 +1,14 @@
+# Dependencies and generated files
+node_modules/
+.next/
+out/
+
+# Local Vercel metadata (may contain temporary credentials)
+.vercel/
+
+# Local environment files
+.env*
+!.env.example
+
+# Operating system files
+.DS_Store
