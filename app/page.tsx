@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent } from "react";
+import { FormEvent, useRef, useState } from "react";
 
 const projects = [
   { place: "QUINTERO", script: "ritoque", text: "Parcelas conectadas con el paisaje costero, pensadas para vivir tranquilo y cerca de todo." },
@@ -9,11 +9,26 @@ const projects = [
 ];
 
 export default function Home() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isIntro, setIsIntro] = useState(true);
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     window.alert("¡Gracias por tu mensaje! Te contactaremos pronto.");
     event.currentTarget.reset();
   }
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      const time = videoRef.current.currentTime;
+      // Los primeros ~3.8 segundos del video contienen texto en la parte inferior
+      if (time < 3.8) {
+        setIsIntro(true);
+      } else {
+        setIsIntro(false);
+      }
+    }
+  };
 
   return (
     <main>
@@ -27,17 +42,30 @@ export default function Home() {
       </header>
 
       <section id="inicio" className="hero">
-        <video className="hero-video" autoPlay muted loop playsInline poster="/media/referencia.jpeg">
+        <video
+          ref={videoRef}
+          className="hero-video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/media/referencia.jpeg"
+          onTimeUpdate={handleTimeUpdate}
+        >
           <source src="/media/presentacion-jurke.mp4" type="video/mp4" />
         </video>
         <div className="hero-shade" />
-        <div className="hero-content">
-          <p className="eyebrow">VALLE ALEGRE</p>
-          <h1>fundo la tiza</h1>
-          <p className="hero-detail">43 parcelas de 2 y 4 hectáreas con luz y rol propio</p>
-          <a className="button" href="#proyectos">Conoce el proyecto <span>→</span></a>
+        <div className={`hero-content ${isIntro ? "hero-intro" : ""}`}>
+          <div className="hero-top">
+            <p className="eyebrow">VALLE ALEGRE</p>
+            <h1>fundo la tiza</h1>
+          </div>
+          <div className="hero-bottom">
+            <p className="hero-detail">43 parcelas de 2 y 4 hectáreas con luz y rol propio</p>
+            <a className="button" href="#proyectos">Conoce el proyecto <span>→</span></a>
+          </div>
         </div>
-        <div className="scroll-note">Desliza para descubrir</div>
+        <div className={`scroll-note ${isIntro ? "is-hidden" : ""}`}>Desliza para descubrir</div>
       </section>
 
       <section id="proyectos" className="projects section-dark">
@@ -79,7 +107,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer><div className="brand footer-brand"><img src="/media/logo-jurke.png" alt="Jürke Inmobiliaria — Inversión es visión" /></div><p>© {new Date().getFullYear()} Jürke Inmobiliaria</p><div><a href="#inicio">Instagram</a><a href="#inicio">LinkedIn</a></div></footer>
+      <footer><div className="brand footer-brand"><img src="/media/logo-jurke-white.png" alt="Jürke Inmobiliaria — Inversión es visión" /></div><p>© {new Date().getFullYear()} Jürke Inmobiliaria</p><div><a href="#inicio">Instagram</a><a href="#inicio">LinkedIn</a></div></footer>
     </main>
   );
 }

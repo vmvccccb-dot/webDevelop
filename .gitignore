@@ -1,7 +1,9 @@
 # Dependencies and generated files
 node_modules/
 .next/
+.idea/
 out/
+.gitignore
 
 # Local Vercel metadata (may contain temporary credentials)
 .vercel/
@@ -12,3 +14,4 @@ out/
 
 # Operating system files
 .DS_Store
+
