@@ -15,8 +15,8 @@ export default function SiteFooter() {
         <div className="footer-social">
           <strong>Redes sociales</strong>
           <div className="social-links" aria-label="Redes sociales">
-            <a href="https://x.com" target="_blank" rel="noreferrer" aria-label="X">
-              <img src="/media/social/x.png" alt="" />
+            <a href="https://www.instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">
+              <img src="/media/social/instagram.svg" alt="" />
             </a>
             <a href="https://www.facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">
               <img src="/media/social/facebook.png" alt="" />
