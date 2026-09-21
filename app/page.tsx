@@ -287,7 +287,7 @@ export default function Home() {
 
       <section id="proyectos" className="home-projects">
         <div className="home-projects-heading">
-          <p className="script-title dark">proyectos</p>
+          <p className="script-title dark">Proyectos</p>
           <p>Conoce algunas oportunidades inmobiliarias seleccionadas por Quirke.</p>
         </div>
         <div className="home-project-grid">
@@ -413,7 +413,7 @@ export default function Home() {
           <div className="contact-grid">
             <div className="contact-info">
               <a href="tel:+56974843852">+56 9 7484 3852</a>
-              <a href="mailto:info@quilkeinmobiliaria.cl">info@quilkeinmobiliaria.cl</a>
+              <a href="mailto:info@quirkeinmobiliaria.cl">info@quirkeinmobiliaria.cl</a>
             </div>
             <form onSubmit={handleSubmit}>
               <label>Nombre<input name="name" required /></label>
