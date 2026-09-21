@@ -4,42 +4,141 @@ import { FormEvent, useEffect, useState } from "react";
 import emailjs from "@emailjs/browser";
 import SiteFooter from "./components/SiteFooter";
 
-const projects = [
+type Project = {
+  name: string;
+  location: string;
+  area: string;
+  price: string;
+  description: string;
+  image: string;
+  images: string[];
+  details?: Array<{ label: string; value: string; href?: string }>;
+};
+
+function createProjectDetails(pie: string, price: string, location: string) {
+  return [
+    { label: "Electricidad", value: "Medidor instalado en cada terreno" },
+    { label: "Agua potable", value: "Medidor instalado en cada terreno" },
+    { label: "Saneamiento", value: "Kit de fosa séptica incluido" },
+    { label: "Urbanización", value: "Caminos compactados, luminarias públicas, plaza de juegos infantiles, cancha de fútbol playa, voleibol y tenis" },
+    { label: "Comisión de corretaje", value: "2,5%" },
+    { label: "Entrega proyectada", value: "Finales del primer semestre de 2026" },
+    { label: "Ubicación exacta", value: `Ver ubicación de ${location} en Google Maps` },
+    { label: "Financiamiento", value: `Crédito directo: pie del ${pie} y saldo hasta en 60 cuotas sin interés` },
+    { label: "Valor venta en verde", value: price },
+  ];
+}
+
+const projects: Project[] = [
   {
-    name: "Los Boldos",
-    location: "Costa de Ritoque",
+    name: "LOS BOLDOS",
+    location: "Reserva Los Boldos, Olmué",
     area: "4.800 m²",
     price: "Desde CLP $ 620.000.000",
     description:
       "Terrenos costeros con entorno natural, cercanía al mar y un perfil ideal para inversión o vivienda de descanso.",
-    image: "/media/proyectos/los_boldos.jpeg",
+    image: "/media/proyectos/los_boldos/LosBoldos-01.jpeg",
+    images: [
+      "/media/proyectos/los_boldos/LosBoldos-01.jpeg",
+      "/media/proyectos/los_boldos/LosBoldos-02.jpeg",
+      "/media/proyectos/los_boldos/LosBoldos-03.jpeg",
+      "/media/proyectos/los_boldos/LosBoldos-04.jpg",
+    ],
+    details: createProjectDetails("25%", "$620.000.000 a $680.000.000", "LOS BOLDOS"),
   },
   {
-    name: "La Tiza",
-    location: "Sector norte de Quilpué",
+    name: "LA TIZA",
+    location: "Fundo La Tiza, Valle Alegre",
     area: "3.200 m²",
     price: "Desde CLP $ 490.000.000",
     description:
       "Parcelas con acceso, vistas y una proyección de valorización sostenida en una zona de constante crecimiento.",
-    image: "/media/proyectos/la_tiza.jpeg",
+    image: "/media/proyectos/la_tiza/LaTiza-01.jpeg",
+    images: [
+      "/media/proyectos/la_tiza/LaTiza-01.jpeg",
+      "/media/proyectos/la_tiza/LaTiza-02.jpeg",
+      "/media/proyectos/la_tiza/LaTiza-03.jpeg",
+      "/media/proyectos/la_tiza/LaTiza-04.jpeg",
+    ],
+    details: createProjectDetails("25%", "$490.000.000 a $540.000.000", "LA TIZA"),
   },
   {
-    name: "Reñaca",
-    location: "Valle Alegre, Puchuncaví",
+    name: "CONCON",
+    location: "Casa en Playa Amarilla, Concón",
     area: "43 parcelas · 2 y 4 hectáreas",
     price: "Desde CLP $ 890.000.000",
     description:
       "Un proyecto exclusivo de parcelas en un entorno privilegiado, pensado para quienes buscan tranquilidad, paisaje y valor a largo plazo.",
-    image: "/media/proyectos/renaca.jpeg",
+    image: "/media/proyectos/concon/Reñaca-01.jpeg",
+    images: [
+      "/media/proyectos/concon/Reñaca-01.jpeg",
+      "/media/proyectos/concon/Reñaca-02.jpeg",
+      "/media/proyectos/concon/Reñaca-03.jpeg",
+      "/media/proyectos/concon/Reñaca-04.jpeg",
+      "/media/proyectos/concon/Reñaca-05.jpeg",
+    ],
+    details: createProjectDetails("25%", "$890.000.000 a $980.000.000", "CONCON"),
   },
   {
-    name: "Valparaíso",
-    location: "Corredor costero de Valparaíso",
+    name: "QUINTERO ALTOS DEL BELLOTO",
+    location: "Altos del Belloto, Quintero",
+    area: "Consultar superficie",
+    price: "Consultar valor",
+    description:
+      "Una alternativa inmobiliaria en Quintero, pensada para quienes buscan conectividad, entorno natural y proyección de valor.",
+    image: "/media/proyectos/quintero_altos_del_belloto/Quintero-01.jpg",
+    images: [
+      "/media/proyectos/quintero_altos_del_belloto/Quintero-01.jpg",
+      "/media/proyectos/quintero_altos_del_belloto/Quintero-02.jpg",
+      "/media/proyectos/quintero_altos_del_belloto/Quintero-03.jpg",
+      "/media/proyectos/quintero_altos_del_belloto/Quintero-04.jpg",
+    ],
+    details: createProjectDetails("25%", "$390.000.000 a $450.000.000", "QUINTERO ALTOS DEL BELLOTO"),
+  },
+  {
+    name: "QUINTERO NORMANDIE",
+    location: "Hacienda Normandie, Quintero",
+    area: "680 m² a 760 m²",
+    price: "$45.000.000 a $55.000.000 en verde",
+    description:
+      "Terrenos urbanizados en Quintero, con servicios instalados y alternativas de financiamiento directo.",
+    details: [
+      { label: "Electricidad", value: "Medidor instalado en cada terreno" },
+      { label: "Agua potable", value: "Medidor instalado en cada terreno" },
+      { label: "Saneamiento", value: "Kit de fosa séptica incluido" },
+      { label: "Urbanización", value: "Caminos compactados, luminarias públicas, plaza de juegos infantiles, cancha de fútbol playa, voleibol y tenis" },
+      { label: "Comisión de corretaje", value: "2,5%" },
+      { label: "Entrega proyectada", value: "Finales del primer semestre de 2026" },
+      { label: "Ubicación exacta", value: "Ver ubicación en Google Maps", href: "https://maps.google.com/?q=-32.804352,-71.526970" },
+      { label: "Financiamiento", value: "Crédito directo: pie del 25% y saldo hasta en 60 cuotas sin interés" },
+    ],
+    image: "/media/proyectos/quintero_normandie/Normandie-01.jpeg",
+    images: [
+      "/media/proyectos/quintero_normandie/Normandie-01.jpeg",
+      "/media/proyectos/quintero_normandie/Normandie-02.jpeg",
+      "/media/proyectos/quintero_normandie/Normandie-03.jpeg",
+      "/media/proyectos/quintero_normandie/Normandie-04.jpeg",
+    ],
+  },
+  {
+    name: "RECREO VIÑA DEL MAR",
+    location: "Casa en Recreo, Viña del Mar",
     area: "2.100 m²",
     price: "Desde CLP $ 430.000.000",
     description:
       "Propiedades con identidad, cercanía a la ciudad y un alto potencial de reposicionamiento en el puerto y sus alrededores.",
-    image: "/media/proyectos/valparaiso.jpeg",
+    image: "/media/proyectos/recreo_viña_del_mar/RecreoViña-01.jpg",
+    images: [
+      "/media/proyectos/recreo_viña_del_mar/RecreoViña-01.jpg",
+      "/media/proyectos/recreo_viña_del_mar/RecreoViña-02.jpg",
+      "/media/proyectos/recreo_viña_del_mar/RecreoViña-03.jpg",
+      "/media/proyectos/recreo_viña_del_mar/RecreoViña-04.jpg",
+      "/media/proyectos/recreo_viña_del_mar/RecreoViña-05.jpg",
+      "/media/proyectos/recreo_viña_del_mar/RecreoViña-06.jpg",
+      "/media/proyectos/recreo_viña_del_mar/RecreoViña-07.jpg",
+      "/media/proyectos/recreo_viña_del_mar/RecreoViña-08.jpg",
+    ],
+    details: createProjectDetails("25%", "$430.000.000 a $490.000.000", "RECREO VIÑA DEL MAR"),
   },
 ];
 
@@ -48,6 +147,7 @@ const navigationSections = ["inicio", "proyectos", "nosotros", "contacto"] as co
 export default function Home() {
   const [isSending, setIsSending] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
+  const [activeProjectImage, setActiveProjectImage] = useState(0);
   const [activeSection, setActiveSection] = useState<(typeof navigationSections)[number]>("inicio");
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
   const carouselImages = [
@@ -93,16 +193,28 @@ export default function Home() {
     setActiveSlide((current) => (current + direction + carouselImages.length) % carouselImages.length);
   }
 
+  function openProject(project: (typeof projects)[number]) {
+    setSelectedProject(project);
+    setActiveProjectImage(0);
+  }
+
+  function changeProjectImage(direction: number) {
+    if (!selectedProject) return;
+    setActiveProjectImage((current) => (current + direction + selectedProject.images.length) % selectedProject.images.length);
+  }
+
   useEffect(() => {
     function handleEscape(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setSelectedProject(null);
       }
+      if (event.key === "ArrowLeft") changeProjectImage(-1);
+      if (event.key === "ArrowRight") changeProjectImage(1);
     }
 
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, []);
+  }, [selectedProject]);
 
   useEffect(() => {
     function updateActiveSection() {
@@ -184,7 +296,7 @@ export default function Home() {
               className="home-project-card"
               key={project.name}
               type="button"
-              onClick={() => setSelectedProject(project)}
+              onClick={() => openProject(project)}
             >
               <span className="home-project-image-wrap">
                 <img src={project.image} alt={project.name} />
@@ -233,7 +345,30 @@ export default function Home() {
             <button className="project-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Cerrar información del proyecto">
               ×
             </button>
-            <img src={selectedProject.image} alt={selectedProject.name} />
+            <div className="project-modal-gallery">
+              <img
+                src={selectedProject.images[activeProjectImage]}
+                alt={`${selectedProject.name}, imagen ${activeProjectImage + 1} de ${selectedProject.images.length}`}
+              />
+              <button className="project-modal-control previous" type="button" onClick={() => changeProjectImage(-1)} aria-label="Imagen anterior">
+                ←
+              </button>
+              <button className="project-modal-control next" type="button" onClick={() => changeProjectImage(1)} aria-label="Imagen siguiente">
+                →
+              </button>
+              <div className="project-modal-dots" aria-label="Imágenes del proyecto">
+                {selectedProject.images.map((image, index) => (
+                  <button
+                    className={index === activeProjectImage ? "is-active" : ""}
+                    key={image}
+                    type="button"
+                    onClick={() => setActiveProjectImage(index)}
+                    aria-label={`Ver imagen ${index + 1}`}
+                    aria-current={index === activeProjectImage ? "true" : undefined}
+                  />
+                ))}
+              </div>
+            </div>
             <div className="project-modal-content">
               <p className="project-region">{selectedProject.location}</p>
               <h2 id="project-modal-title">{selectedProject.name}</h2>
@@ -248,6 +383,22 @@ export default function Home() {
                   <dd>{selectedProject.price}</dd>
                 </div>
               </dl>
+              {selectedProject.details && (
+                <ul className="project-modal-details">
+                  {selectedProject.details.map((detail) => (
+                    <li key={detail.label}>
+                      <span>{detail.label}</span>
+                      {detail.href ? (
+                        <a href={detail.href} target="_blank" rel="noreferrer">
+                          {detail.value}
+                        </a>
+                      ) : (
+                        <strong>{detail.value}</strong>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </section>
         </div>

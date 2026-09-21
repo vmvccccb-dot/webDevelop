@@ -6,40 +6,58 @@ import SiteFooter from "../components/SiteFooter";
 
 const projects = [
   {
-    name: "Quilpué",
-    location: "Sector norte de Quilpué",
+    name: "LA TIZA",
+    location: "Fundo La Tiza, Valle Alegre",
     area: "3.200 m²",
     price: "Desde CLP $ 490.000.000",
     description:
       "Parcelas con acceso, vistas y una proyección de valorización sostenida en una zona de constante crecimiento.",
-    image: "/media/proyectos/quilpue.jpg",
+    image: "/media/proyectos/la_tiza/LaTiza-01.jpeg",
   },
   {
-    name: "Ritoque",
-    location: "Costa de Ritoque",
+    name: "LOS BOLDOS",
+    location: "Reserva Los Boldos, Olmué",
     area: "4.800 m²",
     price: "Desde CLP $ 620.000.000",
     description:
       "Terrenos costeros con entorno natural, cercanía al mar y un perfil ideal para inversión o vivienda de descanso.",
-    image: "/media/proyectos/ritoque.jpg",
+    image: "/media/proyectos/los_boldos/LosBoldos-01.jpeg",
   },
   {
-    name: "Fundo La Tiza",
-    location: "Valle Alegre, Puchuncaví",
+    name: "CONCON",
+    location: "Casa en Playa Amarilla, Concón",
     area: "43 parcelas · 2 y 4 hectáreas",
     price: "Desde CLP $ 890.000.000",
     description:
       "Un proyecto exclusivo de parcelas en un entorno privilegiado, pensado para quienes buscan tranquilidad, paisaje y valor a largo plazo.",
-    image: "/media/proyectos/fundo-la-tiza.jpg",
+    image: "/media/proyectos/concon/Reñaca-01.jpeg",
   },
   {
-    name: "Valparaíso",
-    location: "Corredor costero de Valparaíso",
+    name: "QUINTERO ALTOS DEL BELLOTO",
+    location: "Altos del Belloto, Quintero",
+    area: "Consultar superficie",
+    price: "Consultar valor",
+    description:
+      "Una alternativa inmobiliaria en Quintero, pensada para quienes buscan conectividad, entorno natural y proyección de valor.",
+    image: "/media/proyectos/quintero_altos_del_belloto/Quintero-01.jpg",
+  },
+  {
+    name: "QUINTERO NORMANDIE",
+    location: "Hacienda Normandie, Quintero",
+    area: "Consultar superficie",
+    price: "Consultar valor",
+    description:
+      "Un proyecto con identidad en Quintero, ideal para conocer nuevas oportunidades de inversión en la costa de la región.",
+    image: "/media/proyectos/quintero_normandie/Normandie-01.jpeg",
+  },
+  {
+    name: "RECREO VIÑA DEL MAR",
+    location: "Casa en Recreo, Viña del Mar",
     area: "2.100 m²",
     price: "Desde CLP $ 430.000.000",
     description:
       "Propiedades con identidad, cercanía a la ciudad y un alto potencial de reposicionamiento en el puerto y sus alrededores.",
-    image: "/media/proyectos/valparaiso.jpg",
+    image: "/media/proyectos/recreo_viña_del_mar/RecreoViña-01.jpg",
   },
 ];
 
@@ -71,7 +89,7 @@ export default function ProyectosPage() {
       <div className="projects-stats">
         <div>
           <span>Ubicaciones</span>
-          <strong>4</strong>
+          <strong>6</strong>
         </div>
         <div>
           <span>Superficie</span>
