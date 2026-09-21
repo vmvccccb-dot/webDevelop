@@ -44,17 +44,6 @@ const projects = [
 ];
 
 export default function ProyectosPage() {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const carouselImages = [
-    { src: "/media/proyectos/proyecto1.png", alt: "Proyecto inmobiliario Quirke" },
-    { src: "/media/proyectos/proyecto2.png", alt: "Espacio natural de un proyecto Quirke" },
-    { src: "/media/proyectos/proyecto3.png", alt: "Entorno de un proyecto inmobiliario Quirke" },
-  ];
-
-  function changeSlide(direction: number) {
-    setActiveSlide((current) => (current + direction + carouselImages.length) % carouselImages.length);
-  }
-
   return (
     <main className="projects-page">
       <header className="header projects-header">
@@ -63,16 +52,13 @@ export default function ProyectosPage() {
         </Link>
         <nav aria-label="Navegación principal">
           <Link href="/">Inicio</Link>
-          <Link href="/nosotros">Quiénes somos</Link>
-          <Link className="active" href="/proyectos">Proyectos</Link>
+          <Link className="active" href="/#proyectos">Proyectos</Link>
+          <Link href="/#nosotros">Quiénes somos</Link>
           <a href="/#contacto">Contacto</a>
         </nav>
       </header>
 
       <section className="projects-video-hero section-dark">
-        <video className="projects-video" autoPlay muted loop playsInline poster="/media/referencia.jpeg">
-          <source src="/media/presentacion-jurke.mp4" type="video/mp4" />
-        </video>
         <div className="projects-video-overlay">
           <p className="eyebrow">Quirke Inmobiliaria</p>
           <h1>Inversión es visión</h1>
@@ -105,33 +91,6 @@ export default function ProyectosPage() {
         <div className="section-heading">
           <p className="script-title dark">proyectos</p>
           <p className="section-subtitle">Quirke Inmobiliaria | Inversión es visión</p>
-        </div>
-
-        <div className="projects-carousel" aria-label="Galería de proyectos">
-          <div className="carousel-image-wrap">
-            <img
-              src={carouselImages[activeSlide].src}
-              alt={carouselImages[activeSlide].alt}
-            />
-            <button className="carousel-control previous" type="button" onClick={() => changeSlide(-1)} aria-label="Imagen anterior">
-              ←
-            </button>
-            <button className="carousel-control next" type="button" onClick={() => changeSlide(1)} aria-label="Imagen siguiente">
-              →
-            </button>
-          </div>
-          <div className="carousel-dots">
-            {carouselImages.map((image, index) => (
-              <button
-                className={index === activeSlide ? "is-active" : ""}
-                key={image.src}
-                type="button"
-                onClick={() => setActiveSlide(index)}
-                aria-label={`Ver imagen ${index + 1}`}
-                aria-current={index === activeSlide ? "true" : undefined}
-              />
-            ))}
-          </div>
         </div>
 
         <div className="portfolio-grid">

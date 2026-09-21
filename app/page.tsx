@@ -1,13 +1,61 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import emailjs from "@emailjs/browser";
 import SiteFooter from "./components/SiteFooter";
 
+const projects = [
+  {
+    name: "Los Boldos",
+    location: "Costa de Ritoque",
+    area: "4.800 m²",
+    price: "Desde CLP $ 620.000.000",
+    description:
+      "Terrenos costeros con entorno natural, cercanía al mar y un perfil ideal para inversión o vivienda de descanso.",
+    image: "/media/proyectos/los_boldos.jpeg",
+  },
+  {
+    name: "La Tiza",
+    location: "Sector norte de Quilpué",
+    area: "3.200 m²",
+    price: "Desde CLP $ 490.000.000",
+    description:
+      "Parcelas con acceso, vistas y una proyección de valorización sostenida en una zona de constante crecimiento.",
+    image: "/media/proyectos/la_tiza.jpeg",
+  },
+  {
+    name: "Reñaca",
+    location: "Valle Alegre, Puchuncaví",
+    area: "43 parcelas · 2 y 4 hectáreas",
+    price: "Desde CLP $ 890.000.000",
+    description:
+      "Un proyecto exclusivo de parcelas en un entorno privilegiado, pensado para quienes buscan tranquilidad, paisaje y valor a largo plazo.",
+    image: "/media/proyectos/renaca.jpeg",
+  },
+  {
+    name: "Valparaíso",
+    location: "Corredor costero de Valparaíso",
+    area: "2.100 m²",
+    price: "Desde CLP $ 430.000.000",
+    description:
+      "Propiedades con identidad, cercanía a la ciudad y un alto potencial de reposicionamiento en el puerto y sus alrededores.",
+    image: "/media/proyectos/valparaiso.jpeg",
+  },
+];
+
+const navigationSections = ["inicio", "proyectos", "nosotros", "contacto"] as const;
+
 export default function Home() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isIntro, setIsIntro] = useState(true);
   const [isSending, setIsSending] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [activeSection, setActiveSection] = useState<(typeof navigationSections)[number]>("inicio");
+  const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
+  const carouselImages = [
+    ...Array.from({ length: 5 }, (_, index) => ({
+      src: `/media/Slider/slider${index + 1}.jpeg`,
+      alt: `Imagen ${index + 1} del slider de proyectos Quirke`,
+    })),
+  ];
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -41,16 +89,46 @@ export default function Home() {
     }
   }
 
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      const time = videoRef.current.currentTime;
-      if (time < 3.8) {
-        setIsIntro(true);
-      } else {
-        setIsIntro(false);
+  function changeSlide(direction: number) {
+    setActiveSlide((current) => (current + direction + carouselImages.length) % carouselImages.length);
+  }
+
+  useEffect(() => {
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setSelectedProject(null);
       }
     }
-  };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, []);
+
+  useEffect(() => {
+    function updateActiveSection() {
+      const headerOffset = 110;
+      const currentPosition = window.scrollY + headerOffset;
+      let nextSection: (typeof navigationSections)[number] = navigationSections[0];
+
+      navigationSections.forEach((sectionId) => {
+        const section = document.getElementById(sectionId);
+        const sectionTop = section ? section.getBoundingClientRect().top + window.scrollY : null;
+        if (sectionTop !== null && sectionTop <= currentPosition) {
+          nextSection = sectionId;
+        }
+      });
+
+      setActiveSection(nextSection);
+    }
+
+    updateActiveSection();
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    return () => window.removeEventListener("scroll", updateActiveSection);
+  }, []);
+
+  function handleNavigationClick(sectionId: (typeof navigationSections)[number]) {
+    setActiveSection(sectionId);
+  }
 
   return (
     <main>
@@ -59,82 +137,121 @@ export default function Home() {
           <img src="/media/logo-jurke.png" alt="Quirke Inmobiliaria — Inversión es visión" />
         </a>
         <nav aria-label="Navegación principal">
-          <a className="active" href="#inicio">Inicio</a>
-          <a href="/nosotros">Quiénes somos</a>
-          <a href="/proyectos">Proyectos</a>
-          <a href="#contacto">Contacto</a>
+          <a className={activeSection === "inicio" ? "active" : undefined} href="#inicio" onClick={() => handleNavigationClick("inicio")}>Inicio</a>
+          <a className={activeSection === "proyectos" ? "active" : undefined} href="#proyectos" onClick={() => handleNavigationClick("proyectos")}>Proyectos</a>
+          <a className={activeSection === "nosotros" ? "active" : undefined} href="#nosotros" onClick={() => handleNavigationClick("nosotros")}>Quiénes somos</a>
+          <a className={activeSection === "contacto" ? "active" : undefined} href="#contacto" onClick={() => handleNavigationClick("contacto")}>Contacto</a>
         </nav>
       </header>
 
-      <section id="inicio" className="hero">
-        <video
-          ref={videoRef}
-          className="hero-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="/media/referencia.jpeg"
-          onTimeUpdate={handleTimeUpdate}
-        >
-          <source src="/media/presentacion-jurke.mp4" type="video/mp4" />
-        </video>
-        <div className="hero-shade" />
-        <div className={`hero-content ${isIntro ? "hero-intro" : ""}`}>
-          <div className="hero-top">
-            <p className="eyebrow">Quirke</p>
-            <h1>Inversión es visión</h1>
+      <section id="inicio" className="home-carousel-section section-dark">
+        <div className="projects-carousel" aria-label="Galería de proyectos">
+          <div className="carousel-image-wrap">
+            <img
+              src={carouselImages[activeSlide].src}
+              alt={carouselImages[activeSlide].alt}
+            />
+            <button className="carousel-control previous" type="button" onClick={() => changeSlide(-1)} aria-label="Imagen anterior">
+              ←
+            </button>
+            <button className="carousel-control next" type="button" onClick={() => changeSlide(1)} aria-label="Imagen siguiente">
+              →
+            </button>
           </div>
-          <div className="hero-bottom">
-            <p className="hero-detail">Fundo La Tiza • Valle Alegre, Puchuncaví</p>
-            <a className="button" href="/proyectos">Descubre nuestros proyectos <span>→</span></a>
+          <div className="carousel-dots">
+            {carouselImages.map((image, index) => (
+              <button
+                className={index === activeSlide ? "is-active" : ""}
+                key={image.src}
+                type="button"
+                onClick={() => setActiveSlide(index)}
+                aria-label={`Ver imagen ${index + 1}`}
+                aria-current={index === activeSlide ? "true" : undefined}
+              />
+            ))}
           </div>
-        </div>
-        <div className={`scroll-note ${isIntro ? "is-hidden" : ""}`}>Explora la propuesta</div>
-      </section>
-
-      <section className="hero-highlights">
-        <div>
-          <span>Ubicación</span>
-          <strong>Valle Alegre</strong>
-        </div>
-        <div>
-          <span>Proyecto</span>
-          <strong>Fundo La Tiza</strong>
-        </div>
-        <div>
-          <span>Parcelas</span>
-          <strong>43 unidades</strong>
-        </div>
-        <div>
-          <span>Superficie</span>
-          <strong>2 a 4 hectáreas</strong>
         </div>
       </section>
 
-      <section className="value-section">
-        <div className="value-intro">
-          <p className="section-kicker">Nuestra propuesta</p>
-          <h2>Un desarrollo pensado para inversión, tranquilidad y crecimiento.</h2>
+      <section id="proyectos" className="home-projects">
+        <div className="home-projects-heading">
+          <p className="script-title dark">proyectos</p>
+          <p>Conoce algunas oportunidades inmobiliarias seleccionadas por Quirke.</p>
         </div>
-        <div className="value-grid">
+        <div className="home-project-grid">
+          {projects.map((project) => (
+            <button
+              className="home-project-card"
+              key={project.name}
+              type="button"
+              onClick={() => setSelectedProject(project)}
+            >
+              <span className="home-project-image-wrap">
+                <img src={project.image} alt={project.name} />
+              </span>
+              <span className="home-project-copy">
+                <span className="project-region">{project.location}</span>
+                <strong>{project.name}</strong>
+                <span className="home-project-link">Ver proyecto <span aria-hidden="true">→</span></span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <div className="section-divider" aria-hidden="true" />
+
+      <section id="nosotros" className="about-section about-page-content">
+        <div className="about-intro">
+          <p className="section-kicker">Quiénes somos</p>
+          <h2>Conectamos personas con espacios que crean valor.</h2>
+          <p>
+            En Quirke Inmobiliaria conectamos personas con terrenos y propiedades seleccionadas en ubicaciones estratégicas. Trabajamos con una mirada cercana, profesional y orientada a crear valor sostenible en cada proyecto.
+          </p>
+        </div>
+        <div className="about-mv">
           <article>
-            <span>01</span>
-            <h3>Ubicación estratégica</h3>
-            <p>Acceso directo a la costa y a zonas de alta demanda, con un entorno de valor residencial y de inversión.</p>
+            <span>Misión</span>
+            <p>Entregar oportunidades inmobiliarias confiables, acompañando cada decisión con información clara, asesoría cercana y una mirada responsable sobre el territorio.</p>
           </article>
           <article>
-            <span>02</span>
-            <h3>Calidad de lote</h3>
-            <p>Parcelas con proporciones funcionales, topografía adecuada y diseño orientado a la vida en comunidad.</p>
-          </article>
-          <article>
-            <span>03</span>
-            <h3>Potencial de inversión</h3>
-            <p>Una oportunidad para posicionarse en un sector con crecimiento sostenido y atractivo para uso residencial.</p>
+            <span>Visión</span>
+            <p>Ser una inmobiliaria reconocida por desarrollar proyectos con identidad, calidad y potencial, construyendo relaciones duraderas con nuestros clientes e inversionistas.</p>
           </article>
         </div>
       </section>
+
+      {selectedProject && (
+        <div className="project-modal-backdrop" onClick={() => setSelectedProject(null)}>
+          <section
+            className="project-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-modal-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button className="project-modal-close" type="button" onClick={() => setSelectedProject(null)} aria-label="Cerrar información del proyecto">
+              ×
+            </button>
+            <img src={selectedProject.image} alt={selectedProject.name} />
+            <div className="project-modal-content">
+              <p className="project-region">{selectedProject.location}</p>
+              <h2 id="project-modal-title">{selectedProject.name}</h2>
+              <p>{selectedProject.description}</p>
+              <dl>
+                <div>
+                  <dt>Superficie</dt>
+                  <dd>{selectedProject.area}</dd>
+                </div>
+                <div>
+                  <dt>Valor referencial</dt>
+                  <dd>{selectedProject.price}</dd>
+                </div>
+              </dl>
+            </div>
+          </section>
+        </div>
+      )}
 
       <div className="contact-footer">
         <section id="contacto" className="contact section-dark contact-footer-inner">
@@ -145,7 +262,7 @@ export default function Home() {
           <div className="contact-grid">
             <div className="contact-info">
               <a href="tel:+56974843852">+56 9 7484 3852</a>
-              <a href="mailto:info@quilqueinmobiliaria.cl">info@quilqueinmobiliaria.cl</a>
+              <a href="mailto:info@quilkeinmobiliaria.cl">info@quilkeinmobiliaria.cl</a>
             </div>
             <form onSubmit={handleSubmit}>
               <label>Nombre<input name="name" required /></label>
