@@ -1342,15 +1342,15 @@ footer {
   height: 100%;
   object-fit: cover;
   will-change: transform;
-  animation: slow-image-drift 5.1s ease-in-out infinite alternate;
+  animation: slow-image-drift 4.1s ease-in-out infinite alternate;
 }
 
 @keyframes slow-image-drift {
   0% {
-    transform: scale(1.08) translate3d(-3%, -1.5%, 0);
+    transform: scale(1.4) translate3d(-10%, -1.5%, 0);
   }
   100% {
-    transform: scale(1.18) translate3d(3%, 1.5%, 0);
+    transform: scale(1.58) translate3d(10%, 1.5%, 0);
   }
 }
 
