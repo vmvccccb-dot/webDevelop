@@ -146,16 +146,9 @@ const navigationSections = ["inicio", "proyectos", "nosotros", "contacto"] as co
 
 export default function Home() {
   const [isSending, setIsSending] = useState(false);
-  const [activeSlide, setActiveSlide] = useState(0);
   const [activeProjectImage, setActiveProjectImage] = useState(0);
   const [activeSection, setActiveSection] = useState<(typeof navigationSections)[number]>("inicio");
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
-  const carouselImages = [
-    ...Array.from({ length: 5 }, (_, index) => ({
-      src: `/media/Slider/slider${index + 1}.jpeg`,
-      alt: `Imagen ${index + 1} del slider de proyectos Quirke`,
-    })),
-  ];
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -187,10 +180,6 @@ export default function Home() {
     } finally {
       setIsSending(false);
     }
-  }
-
-  function changeSlide(direction: number) {
-    setActiveSlide((current) => (current + direction + carouselImages.length) % carouselImages.length);
   }
 
   function openProject(project: (typeof projects)[number]) {
@@ -238,6 +227,24 @@ export default function Home() {
     return () => window.removeEventListener("scroll", updateActiveSection);
   }, []);
 
+  useEffect(() => {
+    const revealItems = document.querySelectorAll<HTMLElement>("[data-reveal]");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.14 },
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, []);
+
   function handleNavigationClick(sectionId: (typeof navigationSections)[number]) {
     setActiveSection(sectionId);
   }
@@ -256,31 +263,20 @@ export default function Home() {
         </nav>
       </header>
 
-      <section id="inicio" className="home-carousel-section section-dark">
-        <div className="projects-carousel" aria-label="Galería de proyectos">
-          <div className="carousel-image-wrap">
-            <img
-              src={carouselImages[activeSlide].src}
-              alt={carouselImages[activeSlide].alt}
-            />
-            <button className="carousel-control previous" type="button" onClick={() => changeSlide(-1)} aria-label="Imagen anterior">
-              ←
-            </button>
-            <button className="carousel-control next" type="button" onClick={() => changeSlide(1)} aria-label="Imagen siguiente">
-              →
-            </button>
-          </div>
-          <div className="carousel-dots">
-            {carouselImages.map((image, index) => (
-              <button
-                className={index === activeSlide ? "is-active" : ""}
-                key={image.src}
-                type="button"
-                onClick={() => setActiveSlide(index)}
-                aria-label={`Ver imagen ${index + 1}`}
-                aria-current={index === activeSlide ? "true" : undefined}
-              />
-            ))}
+      <section id="inicio" className="home-motion-section section-dark">
+        <div className="motion-image" aria-label="Vista aérea de La Tiza">
+          <img src="/media/Slider-LaTiza.jpeg" alt="Vista aérea del proyecto La Tiza" />
+          <div className="motion-content">
+            <p className="motion-kicker">Ver propiedades</p>
+            <p className="motion-category">CASAS · FUNDOS · TERRENOS</p>
+            <h1>Propiedades con carácter,<br />inversión con visión.</h1>
+            <p className="motion-description">
+              Seleccionamos y presentamos cada propiedad con el mismo cuidado con el que tú eliges dónde construir tu próximo capítulo. Explora nuestra cartera curada de casas, fundos y terrenos.
+            </p>
+            <div className="motion-actions">
+              <a className="motion-button motion-button-primary" href="#proyectos">Explorar propiedades</a>
+              <a className="motion-button" href="#contacto">Hablar con un asesor</a>
+            </div>
           </div>
         </div>
       </section>
@@ -293,7 +289,8 @@ export default function Home() {
         <div className="home-project-grid">
           {projects.map((project) => (
             <button
-              className="home-project-card"
+              className="home-project-card reveal-item"
+              data-reveal
               key={project.name}
               type="button"
               onClick={() => openProject(project)}
